@@ -221,7 +221,7 @@ if (empty($reshook)) {
 			dol_htmloutput_errors($errormsg, null, 1);
 		} elseif ($invoice->statut != Facture::STATUS_DRAFT) {
 			//If invoice is validated but it is not fully paid is not error and make the payment
-			if ($invoice->getRemainToPay() > 0) {
+			if (abs($invoice->getRemainToPay()) > 0) {
 				$res = 1;
 			} else {
 				dol_syslog("Sale already validated");
@@ -263,7 +263,7 @@ if (empty($reshook)) {
 		// Add the payment
 		if (!$error && $res >= 0) {
 			$remaintopay = $invoice->getRemainToPay();
-			if ($remaintopay > 0) {
+			if (abs($remaintopay) > 0) {
 				$payment = new Paiement($db);
 				$payment->datepaye = $now;
 				$payment->fk_account = $bankaccount;
@@ -892,7 +892,7 @@ if (empty($reshook)) {
 		$sectionwithinvoicelink .= '<span style="font-size:120%;" class="center">';
 		$sectionwithinvoicelink .= $invoice->getNomUrl(1, '', 0, 0, '', 0, 0, -1, '_backoffice')." - ";
 		$remaintopay = $invoice->getRemainToPay();
-		if ($remaintopay > 0) {
+		if (abs($remaintopay) > 0) {
 			$sectionwithinvoicelink .= $langs->trans('RemainToPay').': <span class="amountremaintopay" style="font-size: unset">'.price($remaintopay, 1, $langs, 1, -1, -1, $conf->currency).'</span>';
 		} else {
 			if ($invoice->paye) {
